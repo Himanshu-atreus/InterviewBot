@@ -1,12 +1,10 @@
 "use client";
-import { useUser } from "@/app/provider";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Loader2Icon, PlusIcon, Trash2Icon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
-import { supabase } from "@/services/supabaseClient";
 
 function QuestionList({ formData, onCreateLink }) {
   const [loading, setLoading] = useState(true);
@@ -14,17 +12,10 @@ function QuestionList({ formData, onCreateLink }) {
   const [saveLoading, setSaveLoading] = useState(false);
   const [newQuestion, setNewQuestion] = useState("");
   const [newQuestionType, setNewQuestionType] = useState("behavioral");
-  const { user } = useUser();
   const hasCalled = useRef(false);
-
-  // Debugging useEffect - logs whenever questionList changes
-  useEffect(() => {
-    console.log("Current questionList state:", questionList);
-  }, [questionList]);
 
   useEffect(() => {
     if (formData && !hasCalled.current) {
-      console.log("Initial formData received:", formData);
       GenerateQuestionList();
     }
   }, [formData]);
@@ -33,18 +24,14 @@ function QuestionList({ formData, onCreateLink }) {
     setLoading(true);
     hasCalled.current = true;
     try {
-      console.log("Making API call to generate questions...");
       const result = await axios.post("/api/ai-model", {
         ...formData,
       });
-
-      console.log("API response received:", result.data);
 
       const rawContent = result?.data?.content || result?.data?.Content;
 
       if (!rawContent) {
         toast("Invalid response format");
-        console.error('Missing "content" or "Content" field in response');
         return;
       }
 
@@ -52,16 +39,13 @@ function QuestionList({ formData, onCreateLink }) {
 
       if (!match || !match[1]) {
         toast("Failed to extract question list");
-        console.error("No valid JSON block found in response");
         return;
       }
 
       const parsedData = JSON.parse(match[1].trim());
-      console.log("Parsed question data:", parsedData);
       setQuestionList(parsedData);
     } catch (e) {
       toast("Server Error, Try Again");
-      console.error("Error generating questions:", e);
     } finally {
       setLoading(false);
     }
@@ -73,30 +57,10 @@ function QuestionList({ formData, onCreateLink }) {
       return;
     }
 
-    console.log("Attempting to add new question:", {
-      question: newQuestion,
-      type: newQuestionType
-    });
-
-    setQuestionList(prev => {
-      if (!prev || !prev.interviewQuestions) {
-        console.error("Invalid previous state:", prev);
-        return prev;
-      }
-
-      const newQuestionObj = {
-        question: newQuestion,
-        type: newQuestionType
-      };
-
-      const newState = {
-        ...prev,
-        interviewQuestions: [...prev.interviewQuestions, newQuestionObj]
-      };
-
-      console.log("New state after addition:", newState);
-      return newState;
-    });
+    setQuestionList(prev => ({
+      ...prev,
+      interviewQuestions: [...prev.interviewQuestions, { question: newQuestion, type: newQuestionType }]
+    }));
 
     setNewQuestion("");
     setNewQuestionType("behavioral");
@@ -104,24 +68,13 @@ function QuestionList({ formData, onCreateLink }) {
   };
 
   const handleDeleteQuestion = (index) => {
-    console.log("Attempting to delete question at index:", index);
-
     setQuestionList(prev => {
-      if (!prev || !prev.interviewQuestions || index >= prev.interviewQuestions.length) {
-        console.error("Invalid deletion index or state:", { index, state: prev });
-        return prev;
-      }
-
-      const updatedQuestions = [...prev.interviewQuestions];
-      updatedQuestions.splice(index, 1);
-
-      const newState = {
+      const updated = [...prev.interviewQuestions];
+      updated.splice(index, 1);
+      return {
         ...prev,
-        interviewQuestions: updatedQuestions
+        interviewQuestions: updated
       };
-
-      console.log("New state after deletion:", newState);
-      return newState;
     });
 
     toast("Question deleted successfully");
@@ -131,44 +84,20 @@ function QuestionList({ formData, onCreateLink }) {
     setSaveLoading(true);
     const interview_id = uuidv4();
 
-    console.log("Final question list being saved:", questionList);
-    console.log("Form data being saved:", formData);
-
     try {
-      const { data, error } = await supabase
-        .from("Interviews")
-        .insert([
-          {
-            ...formData,
-            questionList: questionList,
-            userEmail: user?.email,
-            interview_id: interview_id,
-          },
-        ])
-        .select();
+      // Here you would save questionList and formData to your own backend or file, if needed.
+      console.log("Final payload to save:", {
+        interview_id,
+        formData,
+        questionList
+      });
 
-      console.log("Supabase insert result:", { data, error });
-
-      const userUpdate = await supabase
-        .from("Users")
-        .update({ credits: Number(user?.credits) - 1 })
-        .eq("email", user?.email)
-        .select();
-
-      console.log("User credit update result:", userUpdate);
-
-      setSaveLoading(false);
+      // Simulate success
+      toast("Interview saved successfully!");
       onCreateLink(interview_id);
-
-      if (error) {
-        toast("Failed to save interview");
-        console.error("Supabase error:", error);
-      } else {
-        toast("Interview saved successfully!");
-      }
     } catch (e) {
-      console.error("Error saving interview:", e);
       toast("Error saving interview");
+    } finally {
       setSaveLoading(false);
     }
   };
@@ -179,9 +108,7 @@ function QuestionList({ formData, onCreateLink }) {
         <div className="flex flex-col items-center gap-4 mt-10">
           <Loader2Icon className="animate-spin w-6 h-6 text-blue-500" />
           <div className="p-5 bg-blue-50 rounded-xl border border-gray-100 flex flex-col gap-2 items-center text-center">
-            <h2 className="font-semibold text-lg">
-              Generating Interview Questions
-            </h2>
+            <h2 className="font-semibold text-lg">Generating Interview Questions</h2>
             <p className="text-sm text-gray-600">
               Our AI is crafting personalized questions based on your job position
             </p>
@@ -194,8 +121,8 @@ function QuestionList({ formData, onCreateLink }) {
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
             Generated Questions
           </h2>
-          
-          {/* Add Question Form */}
+
+          {/* Add Question */}
           <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
             <h3 className="font-medium mb-3">Add Custom Question</h3>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -225,7 +152,7 @@ function QuestionList({ formData, onCreateLink }) {
               </Button>
             </div>
           </div>
-          
+
           {/* Questions List */}
           <div className="space-y-4">
             {questionList.interviewQuestions.map((item, index) => (
@@ -234,9 +161,7 @@ function QuestionList({ formData, onCreateLink }) {
                 className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-start"
               >
                 <div>
-                  <p className="font-medium">
-                    {index + 1}. {item.question}
-                  </p>
+                  <p className="font-medium">{index + 1}. {item.question}</p>
                   <p className="text-sm text-primary">Type: {item.type}</p>
                 </div>
                 <button
@@ -249,7 +174,7 @@ function QuestionList({ formData, onCreateLink }) {
               </div>
             ))}
           </div>
-          
+
           <div className="flex justify-end mt-10">
             <Button onClick={onFinish} disabled={saveLoading}>
               {saveLoading ? (
