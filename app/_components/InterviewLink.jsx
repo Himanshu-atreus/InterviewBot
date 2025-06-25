@@ -76,8 +76,8 @@ Best regards,
         <Image 
           src={'/tick3.png'} 
           alt='success_icon' 
-          width={200} 
-          height={300} 
+          width={300} 
+          height={350} 
           className='size-[50px]' 
         />
         <h2 className='font-bold text-lg mt-3'>Your AI Interview is Ready!</h2>
@@ -115,34 +115,13 @@ Best regards,
         </div>
       </div>
 
-      <div className='w-full bg-white p-5 rounded-lg'>
-        <h2 className='font-bold'>Share via</h2>
-        <div className='grid grid-cols-3 gap-5 mt-5'>
-          <Button variant='outline' onClick={() => shareVia('email')} className="flex items-center gap-2">
-            <Mail className='size-4' /> Email
-          </Button>
-          <Button variant='outline' onClick={() => shareVia('linkedin')} className="flex items-center gap-2">
-            <Linkedin className='size-4' /> LinkedIn
-          </Button>
-          <Button variant='outline' onClick={() => shareVia('whatsapp')} className="flex items-center gap-2">
-            <Phone className='size-4' /> WhatsApp
-          </Button>
-        </div>
-      </div>
-
       <div className='grid grid-cols-2 gap-5 w-full'>
         <Button 
           variant='outline' 
-          onClick={() => router.push('/dashboard')}
+          onClick={() => router.replace('/')} 
           className='flex items-center gap-2'
         >
           <ArrowLeft className='size-4' /> Back to Dashboard
-        </Button>
-        <Button 
-          onClick={() => router.push('/dashboard/create-interview')}
-          className='flex items-center gap-2'
-        >
-          <Plus className='size-4' /> Create New Interview
         </Button>
       </div>
     </div>

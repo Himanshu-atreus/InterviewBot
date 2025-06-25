@@ -8,23 +8,15 @@ import FormContainer from './_components/FormContainer';
 import QuestionList from './_components/QuestionList';
 import { toast } from 'sonner';
 import InterviewLink from './_components/InterviewLink';
-import { useUser } from '@/app/provider';
+
 
 function CreateInterview() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
   const [interviewId, setInterviewId] = useState();
-  const { user } = useUser();
   const [loading, setLoading] = useState(false);
 
-  // Check credits when component mounts and when user changes
-  useEffect(() => {
-    if (user?.credits <= 0) {
-      toast.error("You don't have enough credits to create an interview");
-      router.push('/dashboard/pricing'); // Redirect to pricing page
-    }
-  }, [user, router]);
 
   const onHandleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -35,11 +27,7 @@ function CreateInterview() {
 
   const onGoToNext = () => {
     // First check credits
-    if (user?.credits <= 0) {
-      toast.error("Please purchase credits to create an interview");
-      router.push('/dashboard/pricing');
-      return;
-    }
+  
 
     // Then validate form fields
     let missingField = '';
@@ -59,13 +47,7 @@ function CreateInterview() {
   const onCreateLink = async (interview_id) => {
     setLoading(true);
     
-    // Double-check credits before proceeding
-    if (user?.credits <= 0) {
-      toast.error("Please purchase credits to create an interview");
-      router.push('/dashboard/pricing');
-      setLoading(false);
-      return;
-    }
+
 
     try {
       setInterviewId(interview_id);

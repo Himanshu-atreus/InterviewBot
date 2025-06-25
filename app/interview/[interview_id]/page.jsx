@@ -92,7 +92,7 @@ function Interview() {
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               className="absolute inset-0 border-2 border-dashed border-indigo-200 rounded-full"
             />
-            <Image src="/Suji.png" alt="Logo" fill className="object-contain p-4" priority />
+            <Image src="/rico.png" alt="Logo" fill className="object-contain p-4" priority />
           </div>
           <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
             AI Interview Portal
@@ -114,7 +114,7 @@ function Interview() {
               </div>
               <div className="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-full">
                 <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-sm text-white">Live Session Ready</span>
+                <span className="text-sm text-white">Rico is waiting on the interview pannel</span>
               </div>
             </div>
           </div>

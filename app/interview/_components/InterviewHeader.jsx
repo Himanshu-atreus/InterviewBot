@@ -7,8 +7,8 @@ function InterviewHeader() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-3 flex items-center">
         <div className="flex-shrink-0">
           <Image 
-            src="/Suji.png" 
-            alt="Suji Logo" 
+            src="/rico.png" 
+            alt="rico png"
             width={120}  // Slightly larger for better visibility
             height={40}  // Match your logo's aspect ratio
             className="h-auto w-[100px] sm:w-[120px]" // Responsive sizing

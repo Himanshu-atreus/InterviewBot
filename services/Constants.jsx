@@ -1,53 +1,14 @@
-import { BriefcaseBusinessIcon, Code2Icon, User2Icon, Component, Puzzle, Calendar, LayoutDashboard, List, Settings, WalletCards } from "lucide-react";
+import {  Computer, CopyCheck, Calendar, LayoutDashboard, List, Settings, WalletCards } from "lucide-react";
 
-export const SideBarOptions=[
-    {
-        name:'Dashboard',
-        icon:LayoutDashboard,
-        path:'/dashboard'
-    },
-    {
-        name:'Scheduled Interview',
-        icon:Calendar,
-        path:'/scheduled-interview'
-    },
-    {
-        name:'All Interview',
-        icon:List,
-        path:'/all-interview'
-    },
-    {
-        name:'Billing',
-        icon:WalletCards,
-        path:'/billing'
-    },
-    {
-        name:'Settings',
-        icon:Settings,
-        path:'/settings'
-    },
-]
 
 export const InterviewType=[
     {
         name:'Technical',
-        icon:Code2Icon,
+        icon:Computer,
     },
     {
-        name:'Behavioral',
-        icon:User2Icon,
-    },
-    {
-        name:'Experience',
-        icon:BriefcaseBusinessIcon,
-    },
-    {
-        name:'Problem Solving',
-        icon:Puzzle,
-    },
-    {
-        name:'Leadership',
-        icon:Component,
+        name:'HR',
+        icon:CopyCheck,
     },
 ]
 
@@ -83,50 +44,3 @@ format: interviewQuestions=[
 
 🎯 The goal is to create a structured, relevant, and time-optimized interview plan for a {{jobPosition}} role.`
 
-export const FEEDBACK_PROMPT=`{{conversation}}
-
-Depends on this Interview Conversation between assitant and user, 
-
-Give me feedback for user interview. Give me rating out of 10 for technical Skills, 
-
-Communication, Problem Solving, Experience. Also give me summery in 3 lines 
-
-about the interview and one line to let me know whether is recommended 
-
-for hire or not with message very strictly. Give me response in JSON format
-
-{
-
-    feedback:{
-
-        rating:{
-
-            TechnicalSkills:5,
-
-            Communication:6,
-
-            ProblemSolving:4,
-
-            Experience:7,
-
-            Behavioral:8,
-
-            Analysis:9
-
-
-
-        },
-
-        summery:<in 3 Line>,
-
-        Recommendation:'',
-
-        Recommendation Message:''
-
-
-
-    }
-
-}
-
-`
