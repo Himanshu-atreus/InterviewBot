@@ -132,6 +132,7 @@ Keep responses short, engaging, and React-focused.
       if (!content) throw new Error("No feedback returned");
 
       localStorage.setItem("interview-feedback", content);
+      console.log(content)
       router.replace(`/interview/${interview_id}/completed`);
     } catch (error) {
       console.error("Feedback generation failed:", error);

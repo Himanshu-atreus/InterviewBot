@@ -22,7 +22,7 @@ const InterviewCompleted = () => {
         <p className="text-lg text-gray-600 mb-8 relative z-10">
           Thank you for completing your interview with{' '}
           <span className="font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">
-            Recruiter AI
+            Reco
           </span>. 
           We appreciate your thoughtful responses.
         </p>
@@ -87,7 +87,7 @@ const InterviewCompleted = () => {
           </p>
           <p className="text-sm text-gray-500 mt-2">
             Any further Questions ? Contact{' '}
-            <span className="text-blue-600 font-medium">Sujeethkumararjun@gmail.com</span>
+            <span className="text-blue-600 font-medium">sujalpachori@gmail.com</span>
           </p>
         </div>
       </div>
