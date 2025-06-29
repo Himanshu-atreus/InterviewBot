@@ -43,10 +43,10 @@ function StartInterview() {
     }
   }, [interviewInfo, vapi]);
 
-const startCall = async () => {
-  const jobPosition = interviewInfo?.jobPosition || "Unknown Position";
-  const questionList =
-    (interviewInfo?.questionList?.interviewQuestions || []).map((q) => q?.question);
+  const startCall = async () => {
+    const jobPosition = interviewInfo?.jobPosition || "Unknown Position";
+    const questionList =
+      (interviewInfo?.questionList?.interviewQuestions || []).map((q) => q?.question);
 
     const assistantOptions = {
       name: "AI Recruiter",
@@ -91,20 +91,16 @@ Keep responses short, engaging, and React-focused.
       }
     };
 
-    const handleSpeechStart = () => {
-      setIsSpeaking(true);
-      setActiveUser(false);
-    };
-
-    const handleSpeechEnd = () => {
-      setIsSpeaking(false);
-      setActiveUser(true);
-    };
-
     vapi.on("message", handleMessage);
     vapi.on("call-start", () => setStart(true));
-    vapi.on("speech-start", handleSpeechStart);
-    vapi.on("speech-end", handleSpeechEnd);
+    vapi.on("speech-start", () => {
+      setIsSpeaking(true);
+      setActiveUser(false);
+    });
+    vapi.on("speech-end", () => {
+      setIsSpeaking(false);
+      setActiveUser(true);
+    });
     vapi.on("call-end", () => {
       setIsGeneratingFeedback(true);
       GenerateFeedback();
@@ -113,8 +109,8 @@ Keep responses short, engaging, and React-focused.
     return () => {
       vapi.off("message", handleMessage);
       vapi.off("call-start", () => {});
-      vapi.off("speech-start", handleSpeechStart);
-      vapi.off("speech-end", handleSpeechEnd);
+      vapi.off("speech-start", () => {});
+      vapi.off("speech-end", () => {});
       vapi.off("call-end", () => {});
     };
   }, [vapi]);
@@ -124,116 +120,111 @@ Keep responses short, engaging, and React-focused.
       const result = await axios.post("/api/ai-feedback", {
         conversation: conversation.current,
       });
-
-      const content = result?.data?.content
-        ?.replace("```json", "")
-        ?.replace("```", "");
-
-      if (!content) throw new Error("No feedback returned");
-
+      const content = result.data.content.replace(/```json|```/g, "");
+      if (!content) throw new Error();
       localStorage.setItem("interview-feedback", content);
       console.log(content)
       router.replace(`/interview/${interview_id}/completed`);
-    } catch (error) {
-      console.error("Feedback generation failed:", error);
+    } catch {
       toast.error("Failed to generate feedback");
     } finally {
       setIsGeneratingFeedback(false);
     }
   };
 
-  const stopInterview = () => {
-    vapi.stop();
-  };
+  const stopInterview = () => vapi.stop();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-900 p-6 text-gray-100">
       <div className="max-w-6xl mx-auto">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <header className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
-              {interviewInfo?.jobPosition || "AI"} Interview Session
-            </h1>
-            <p className="text-gray-600">Powered by AI Interview Assistant</p>
+            <h1 className="text-3xl font-bold">{interviewInfo?.jobPosition || "AI"} Interview Round</h1>
+            <p className="text-gray-400">Recooty</p>
           </div>
 
-          <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200">
-            <Timer className="text-blue-600" />
-            <span className="font-mono text-lg font-semibold text-gray-700">
-              <TimmerComponent start={start} />
-            </span>
+          {/* Circular Stopwatch Timer */}
+          <div className="relative w-35 h-35">
+            <svg className="absolute inset-0" viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#8b5cf6" />
+                  <stop offset="100%" stopColor="#ec4899" />
+                </linearGradient>
+              </defs>
+              <circle
+                cx="50" cy="50" r="48"
+                stroke="url(#grad)"
+                strokeWidth="4"
+                fill="none"
+              />
+            </svg>
+            <div className="absolute inset-2 bg-gray-800 rounded-full flex items-center justify-center">
+              <span className="font-mono text-2xl font-semibold">
+                <TimmerComponent start={start} />
+              </span>
+            </div>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* AI Panel */}
-          <div className={`bg-white rounded-xl p-6 shadow-md border transition-all duration-300 ${isSpeaking ? "border-blue-300 ring-2 ring-blue-100" : "border-gray-200"}`}>
-            <div className="flex flex-col items-center justify-center h-full space-y-4">
+          <div className={`bg-gray-800 rounded-2xl p-8 shadow-lg border transition-all ${isSpeaking ? "border-indigo-500 ring-4 ring-indigo-300" : "border-gray-700"}`}>
+            <div className="flex flex-col items-center space-y-6">
               <div className="relative">
-                {isSpeaking && (
-                  <div className="absolute inset-0 rounded-full bg-blue-100 animate-ping opacity-75"></div>
-                )}
-                <div className="relative z-10 w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md bg-blue-100">
-                  <Image src="/AIR.png" alt="AI Recruiter" width={80} height={80} priority />
+                {isSpeaking && <div className="absolute inset-0 rounded-lg bg-indigo-500/30 animate-ping"></div>}
+                <div className="w-24 h-24 rounded-lg overflow-hidden shadow-2xl bg-indigo-600 flex items-center justify-center">
+                  <Image src="/rico.png" alt="AI Recruiter" width={96} height={96} priority />
                 </div>
               </div>
               <div className="text-center">
-                <h2 className="text-lg font-semibold text-gray-800">AI Recruiter</h2>
-                <p className="text-sm text-gray-500">Interview HR</p>
+                <h2 className="text-xl font-semibold">Rico AI</h2>
+                <p className="text-sm text-gray-400">Technical Round</p>
               </div>
             </div>
           </div>
 
           {/* Candidate Panel */}
-          <div className={`bg-white rounded-xl p-6 shadow-md border transition-all duration-300 ${activeUser ? "border-purple-300 ring-2 ring-purple-100" : "border-gray-200"}`}>
-            <div className="flex flex-col items-center justify-center h-full space-y-4">
+          <div className={`bg-gray-800 rounded-2xl p-8 shadow-lg border transition-all ${activeUser ? "border-purple-500 ring-4 ring-purple-300" : "border-gray-700"}`}>
+            <div className="flex flex-col items-center space-y-6">
               <div className="relative">
-                {activeUser && (
-                  <div className="absolute inset-0 rounded-full bg-purple-100 animate-ping opacity-75"></div>
-                )}
-                <div className="relative z-10 w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md bg-gray-100 flex items-center justify-center">
+                {activeUser && <div className="absolute inset-0 rounded-lg bg-purple-500/30 animate-ping"></div>}
+                <div className="w-24 h-24 rounded-lg overflow-hidden shadow-2xl bg-gray-700 flex items-center justify-center">
                   {userProfile.picture ? (
-                    <Image src={userProfile.picture} alt={userProfile.name} width={80} height={80} className="object-cover" priority />
+                    <Image src={userProfile.picture} alt={userProfile.name} width={96} height={96} className="object-cover" priority />
                   ) : (
-                    <span className="text-2xl font-bold text-gray-600">
-                      {userProfile.name.charAt(0).toUpperCase()}
-                    </span>
+                    <span className="text-3xl font-bold text-gray-400">{userProfile.name.charAt(0).toUpperCase()}</span>
                   )}
                 </div>
               </div>
               <div className="text-center">
-                <h2 className="text-lg font-semibold text-gray-800">{userProfile.name}</h2>
-                <p className="text-sm text-gray-500">Candidate</p>
+                <h2 className="text-xl font-semibold">{userProfile.name}</h2>
+                <p className="text-sm text-gray-400">Candidate</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Control Panel */}
-        <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200">
+        <div className="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
           <div className="flex flex-col items-center">
-            <div className="flex gap-4 mb-4">
-              <AlertConfirmation stopInterview={stopInterview}>
-                <button className="p-3 rounded-full bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all flex items-center gap-2">
-                  <Phone size={20} />
-                  <span>End Interview</span>
-                </button>
-              </AlertConfirmation>
-            </div>
-
-            <p className="text-sm text-gray-500">
-              {activeUser ? "Please respond..." : "AI is speaking..."}
-            </p>
+            <AlertConfirmation stopInterview={stopInterview}>
+              <button className="p-4 rounded-full bg-red-700 text-red-200 hover:bg-red-600 shadow-xl flex items-center gap-3">
+                <Phone size={24} />
+                <span className="text-lg font-semibold">End Interview</span>
+              </button>
+            </AlertConfirmation>
+            <p className="mt-4 text-sm text-gray-400">{activeUser ? "Please respond..." : "AI is speaking..."}</p>
           </div>
         </div>
       </div>
 
       {isGeneratingFeedback && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 max-w-md w-full text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <h2 className="text-xl font-bold text-gray-800 mb-2">Generating Feedback</h2>
-            <p className="text-gray-600">Please wait while we analyze your interview...</p>
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-400 mx-auto mb-4"></div>
+            <h2 className="text-xl font-bold mb-2">Generating Feedback</h2>
+            <p className="text-gray-400">Please wait while we analyze your interview...</p>
           </div>
         </div>
       )}
