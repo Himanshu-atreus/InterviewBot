@@ -1,7 +1,7 @@
-'use client';
+"use client";
 import React, { useEffect, useState, useContext } from 'react';
 import Image from 'next/image';
-import { Clock, Mic, Video, CheckCircle, ChevronRight } from 'lucide-react';
+import { Clock, Video, CheckCircle, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useParams, useRouter } from 'next/navigation';
@@ -21,9 +21,8 @@ function Interview() {
 
   useEffect(() => {
     if (interview_id) {
-      // Simulate fetching interview details
       const sample = {
-        jobPosition: 'Frontend Developer',
+        jobPosition: 'Software Developer',
         jobDescription: 'Build beautiful and responsive UI components.',
         duration: '30 min',
         type: 'Technical',
@@ -78,30 +77,21 @@ function Interview() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50/30 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="max-w-4xl mx-auto"
       >
-        <motion.div whileHover={{ scale: 1.02 }} className="flex flex-col items-center mb-12">
-          <div className="relative w-28 h-28 mb-4">
-            <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 border-2 border-dashed border-indigo-200 rounded-full"
-            />
-            <Image src="/rico.png" alt="Logo" fill className="object-contain p-4" priority />
-          </div>
-          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
-            AI Interview Portal
-          </h1>
-          <p className="mt-2 text-gray-500">Next-generation hiring experience</p>
-        </motion.div>
 
-        <motion.div whileHover={{ y: -5 }} className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl overflow-hidden border border-white/20">
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-6">
+
+        <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#800000] to-violet-500 text-center mb-8">
+          AI Interview Portal
+        </h1>
+
+        <motion.div whileHover={{ y: -5 }} className="bg-gray-800/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-gray-700">
+          <div className="bg-gradient-to-r from-[#800000] to-violet-500 px-8 py-6">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <div>
                 <h2 className="text-2xl font-bold text-white">
@@ -114,7 +104,7 @@ function Interview() {
               </div>
               <div className="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-full">
                 <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-sm text-white">Rico is waiting on the interview pannel</span>
+                <span className="text-sm text-white">Rico is waiting on the interview panel</span>
               </div>
             </div>
           </div>
@@ -123,15 +113,15 @@ function Interview() {
             <div className="flex items-center justify-center mb-10">
               <div className="relative w-full max-w-md">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t-2 border-dashed border-gray-200" />
+                  <div className="w-full border-t-2 border-dashed border-gray-600" />
                 </div>
                 <div className="relative flex justify-between">
                   {[1, 2, 3].map((step) => (
                     <div key={step} className="flex flex-col items-center">
-                      <div className="h-8 w-8 rounded-full bg-indigo-100 border-2 border-indigo-500 flex items-center justify-center">
+                      <div className="h-8 w-8 bg-indigo-100 border-2 border-indigo-500 flex items-center justify-center rounded-md">
                         <span className="text-sm font-medium text-indigo-700">{step}</span>
                       </div>
-                      <span className="mt-2 text-xs text-gray-500">
+                      <span className="mt-2 text-xs text-gray-300">
                         {['Setup', 'Interview', 'Results'][step - 1]}
                       </span>
                     </div>
@@ -141,58 +131,54 @@ function Interview() {
             </div>
 
             <div className="space-y-6">
+              {/* Full Name */}
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Your Full Name</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Your Full Name</label>
                 <Input
-                  placeholder="Eg: Sujeeth Kumar"
+                  placeholder="Eg: Sujal Pachori"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
-                  className="py-3 px-4 border-gray-300 focus:ring-2 focus:ring-indigo-500"
+                  className="py-3 px-4 border-gray-600 bg-gray-900 text-white focus:ring-2 focus:ring-indigo-500"
                 />
               </motion.div>
 
+              {/* Email */}
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Professional Email</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Professional Email</label>
                 <Input
                   type="email"
-                  placeholder="Eg: Sujeethkumar@example.com"
+                  placeholder="Eg: sujalPachori@domain.com"
                   value={userEmail}
                   onChange={(e) => setUserEmail(e.target.value)}
-                  className="py-3 px-4 border-gray-300 focus:ring-2 focus:ring-indigo-500"
+                  className="py-3 px-4 border-gray-600 bg-gray-900 text-white focus:ring-2 focus:ring-indigo-500"
                 />
               </motion.div>
 
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="bg-indigo-50/50 rounded-xl p-5 border border-indigo-100">
-                <h4 className="font-medium text-indigo-800 mb-3 flex items-center gap-2">
+              {/* Checklist */}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="bg-indigo-900/20 rounded-xl p-5 border border-indigo-600">
+                <h4 className="font-medium text-indigo-300 mb-3 flex items-center gap-2">
                   <CheckCircle className="h-5 w-5" />
-                  Preparation Checklist
+                   Enable the following before joining:
                 </h4>
                 <ul className="space-y-3">
-                  {[
-                    'Provide a proper name & valid email address',
-                    'Give access to your microphone',
-                    'Ensure a stable internet connection',
-                    'Enable camera permissions',
-                    'Use Chrome or Edge browser',
-                    'Find a quiet environment',
-                    'Have your resume handy'
-                  ].map((item, i) => (
+                  {[ 'Proper name & valid email address', 'Give access to your microphone', 'Ensure a stable internet connection', 'Enable camera permissions' ].map((item, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 mt-0.5">
-                        <div className="h-4 w-4 rounded-full bg-indigo-100 border border-indigo-300 flex items-center justify-center">
-                          <div className="h-2 w-2 rounded-full bg-indigo-500" />
+                      <div className="mt-0.5">
+                        <div className="h-4 w-4 rounded-full bg-indigo-300 border border-indigo-500 flex items-center justify-center">
+                          <div className="h-2 w-2 rounded-full bg-indigo-800" />
                         </div>
                       </div>
-                      <span className="text-sm text-gray-700">{item}</span>
+                      <span className="text-sm text-gray-300">{item}</span>
                     </li>
                   ))}
                 </ul>
               </motion.div>
 
+              {/* Join Button */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="pt-4">
                 <Button
                   onClick={onJoinInterview}
-                  className={`w-full py-4 rounded-xl text-lg font-medium transition-all ${!loading && 'hover:shadow-lg'}`}
+                  className={`w-full py-4 rounded-xl text-lg font-medium transition-all bg-[#800000] hover:bg-[#660000] text-white ${!loading && 'hover:shadow-lg'}`}
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">
@@ -205,7 +191,7 @@ function Interview() {
                   ) : (
                     <span className="flex items-center justify-center gap-3">
                       <Video className="h-5 w-5" />
-                      Start Interview Session
+                      Start Interview
                       <ChevronRight className="h-4 w-4" />
                     </span>
                   )}
