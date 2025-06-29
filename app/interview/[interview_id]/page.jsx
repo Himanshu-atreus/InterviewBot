@@ -135,7 +135,10 @@ function Interview() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Your Full Name</label>
                 <Input
-                  placeholder="Eg: Sujal Pachori"
+
+                  
+
+                  placeholder="Eg: James Bond"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   className="py-3 px-4 border-gray-600 bg-gray-900 text-white focus:ring-2 focus:ring-indigo-500"
@@ -147,7 +150,10 @@ function Interview() {
                 <label className="block text-sm font-medium text-gray-300 mb-2">Professional Email</label>
                 <Input
                   type="email"
-                  placeholder="Eg: sujalPachori@domain.com"
+
+
+
+                  placeholder="Eg: yamraaj@domain.com"
                   value={userEmail}
                   onChange={(e) => setUserEmail(e.target.value)}
                   className="py-3 px-4 border-gray-600 bg-gray-900 text-white focus:ring-2 focus:ring-indigo-500"

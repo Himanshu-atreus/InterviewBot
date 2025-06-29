@@ -123,6 +123,7 @@ Keep responses short, engaging, and React-focused.
       const content = result.data.content.replace(/```json|```/g, "");
       if (!content) throw new Error();
       localStorage.setItem("interview-feedback", content);
+      console.log(content)
       router.replace(`/interview/${interview_id}/completed`);
     } catch {
       toast.error("Failed to generate feedback");
